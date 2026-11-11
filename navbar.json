@@ -1,0 +1,45 @@
+
+{
+  "branding": {
+    "name": "curl",
+    "logo": "/assets/images/logo.png"
+  },
+  "navigation": [
+    {
+      "name": "Discover",
+      "url": "/",
+      "icon": "compass",
+      "enabled": true
+    },
+    {
+      "name": "Marketplace",
+      "url": "/marketplace/",
+      "icon": "shopping-bag",
+      "enabled": false
+    },
+    {
+      "name": "Create",
+      "url": "/create/",
+      "icon": "plus-square",
+      "enabled": false
+    }
+  ],
+  "account": {
+    "loggedOut": [
+      {
+        "name": "Log in",
+        "url": "/login/"
+      },
+      {
+        "name": "Sign up",
+        "url": "/register/"
+      }
+    ],
+"loggedIn": [
+  {
+    "name": "Settings",
+    "url": "/settings/"
+  }
+    ]
+  }
+}

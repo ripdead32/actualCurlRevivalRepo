@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log in — Curl</title>
+
+  <script src="/assets/js/theme.js"></script>
+  <link rel="stylesheet" href="/assets/css/global.css">
+  <link rel="stylesheet" href="/assets/css/auth.css">
+</head>
+<body>
+
+<header id="navbar"></header>
+
+<main class="auth-page">
+  <div class="card auth-card">
+
+<div class="auth-logo">
+  <img src="/assets/images/logo.png" alt="Curl">
+</div>
+
+    <h1 class="auth-title">Welcome back</h1>
+
+    <p class="auth-description">
+      Log in to continue to Curl.
+    </p>
+
+    <div id="auth-message"></div>
+
+    <form id="login-form">
+
+      <div class="form-group">
+        <label for="email">Email address</label>
+
+        <input
+          class="form-input"
+          id="email"
+          type="email"
+          placeholder="you@example.com"
+          required
+          autocomplete="email"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+
+        <input
+          class="form-input"
+          id="password"
+          type="password"
+          placeholder="Your password"
+          required
+          autocomplete="current-password"
+        >
+      </div>
+
+      <a href="/forgot-password/" class="auth-forgot">
+        Forgot password?
+      </a>
+
+      <button class="btn btn-primary auth-submit" type="submit">
+        Log in
+      </button>
+
+    </form>
+
+    <div class="auth-bottom">
+      Don't have an account?
+      <a href="/register/">Create one</a>
+    </div>
+
+  </div>
+</main>
+
+<footer>CURL · YOUR WORLD STARTS HERE</footer>
+
+<script type="module" src="/assets/js/navbar.js"></script>
+<script type="module" src="/assets/js/auth.js"></script>
+
+</body>
+</html>

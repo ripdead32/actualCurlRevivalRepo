@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create an account — Curl</title>
+
+  <script src="/assets/js/theme.js"></script>
+  <link rel="stylesheet" href="/assets/css/global.css">
+  <link rel="stylesheet" href="/assets/css/auth.css">
+</head>
+<body>
+
+<header id="navbar"></header>
+
+<main class="auth-page">
+  <div class="card auth-card">
+
+<div class="auth-logo">
+  <img src="/assets/images/logo.png" alt="Curl">
+</div>
+
+    <h1 class="auth-title">Join Curl</h1>
+
+    <p class="auth-description">
+      Create an account and explore the community.
+    </p>
+
+    <div id="auth-message"></div>
+
+    <form id="register-form">
+
+      <div class="form-group">
+        <label for="username">Username</label>
+
+        <input
+          class="form-input"
+          id="username"
+          type="text"
+          placeholder="Choose a username"
+          minlength="3"
+          maxlength="20"
+          pattern="[A-Za-z0-9_]+"
+          required
+          autocomplete="username"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email address</label>
+
+        <input
+          class="form-input"
+          id="email"
+          type="email"
+          placeholder="you@example.com"
+          required
+          autocomplete="email"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+
+        <input
+          class="form-input"
+          id="password"
+          type="password"
+          placeholder="At least 8 characters"
+          minlength="8"
+          required
+          autocomplete="new-password"
+        >
+      </div>
+
+      <button class="btn btn-primary auth-submit" type="submit">
+        Create account
+      </button>
+
+    </form>
+
+    <div class="auth-bottom">
+      Already have an account?
+      <a href="/login/">Log in</a>
+    </div>
+
+  </div>
+</main>
+
+<footer>CURL · CREATE · PLAY · EXPLORE</footer>
+
+<script type="module" src="/assets/js/navbar.js"></script>
+<script type="module" src="/assets/js/auth.js"></script>
+
+</body>
+</html>

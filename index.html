@@ -1,0 +1,287 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#100e16">
+  <meta name="description" content="Discover experiences on Curl.">
+
+  <title>Discover — Curl</title>
+
+  <script src="/assets/js/theme.js"></script>
+  <link rel="stylesheet" href="/assets/css/global.css">
+
+  <style>
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 70px 55px;
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      background:
+        radial-gradient(ellipse at 85% 20%, rgba(167,139,250,.24), transparent 45%),
+        linear-gradient(120deg, var(--surface), var(--surface-2));
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+    }
+
+    .hero h1 {
+      font-size: clamp(40px, 6vw, 62px);
+      line-height: 1.08;
+      letter-spacing: -2.8px;
+      margin: 0 0 18px;
+      font-weight: 900;
+    }
+
+    .hero h1 span {
+      color: var(--accent);
+    }
+
+    .hero p {
+      max-width: 440px;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+
+    .hero-decoration {
+      position: absolute;
+      right: 10%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 230px;
+      height: 230px;
+      border-radius: 50%;
+      border: 1px solid rgba(167,139,250,.2);
+      background:
+        radial-gradient(circle, rgba(167,139,250,.13), transparent 68%);
+      box-shadow:
+        0 0 90px rgba(167,139,250,.12),
+        inset 0 0 60px rgba(167,139,250,.08);
+      pointer-events: none;
+    }
+
+    .hero-decoration::before,
+    .hero-decoration::after {
+      content: "";
+      position: absolute;
+      border: 1px solid rgba(167,139,250,.2);
+      border-radius: 50%;
+    }
+
+    .hero-decoration::before {
+      inset: 25px;
+    }
+
+    .hero-decoration::after {
+      inset: 55px;
+      background: rgba(167,139,250,.04);
+    }
+
+    .section {
+      margin-top: 48px;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .section-heading h2 {
+      font-size: 21px;
+      letter-spacing: -.5px;
+      margin: 0;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 55px 20px;
+    }
+
+    .empty-icon {
+      width: 68px;
+      height: 68px;
+      border-radius: 20px;
+      margin: 0 auto 20px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      background: var(--accent-soft);
+      border: 1px solid rgba(167,139,250,.18);
+    }
+
+    /* Temporary drawn placeholder: experience */
+    .empty-icon.experience::before {
+      content: "";
+      width: 25px;
+      height: 25px;
+      border: 2px solid var(--accent);
+      border-radius: 7px;
+      transform: rotate(-8deg);
+      position: absolute;
+    }
+
+    .empty-icon.experience::after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-top: 7px solid transparent;
+      border-bottom: 7px solid transparent;
+      border-left: 10px solid var(--accent);
+      margin-left: 3px;
+    }
+
+    /* Temporary drawn placeholder: updates */
+    .empty-icon.updates::before {
+      content: "";
+      width: 27px;
+      height: 27px;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      position: absolute;
+    }
+
+    .empty-icon.updates::after {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+      position: absolute;
+    }
+
+    .empty-state h3 {
+      margin: 0 0 9px;
+      font-size: 19px;
+    }
+
+    .empty-state p {
+      color: var(--muted);
+      margin: 0 auto;
+      max-width: 400px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 650px) {
+      .hero {
+        padding: 42px 25px;
+      }
+
+      .hero-decoration {
+        right: -110px;
+        opacity: .2;
+      }
+
+      .hero h1 {
+        letter-spacing: -1.8px;
+      }
+
+      .section {
+        margin-top: 36px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header id="navbar"></header>
+
+<main class="container page">
+
+  <section class="hero">
+
+    <div class="hero-content">
+
+      <h1>
+        Play beyond<br>
+        <span>expectations.</span>
+      </h1>
+
+      <p>
+        Discover experiences, explore new worlds
+        and become part of the Curl community.
+      </p>
+
+      <div class="hero-actions">
+        <a href="/register/" class="btn btn-primary">
+          Get started
+        </a>
+
+        <a href="/login/" class="btn btn-secondary">
+          Log in
+        </a>
+      </div>
+
+    </div>
+
+    <div class="hero-decoration" aria-hidden="true"></div>
+
+  </section>
+
+  <section class="section">
+
+    <div class="section-heading">
+      <h2>Popular experiences</h2>
+    </div>
+
+    <div class="card empty-state">
+
+      <div class="empty-icon experience" aria-hidden="true"></div>
+
+      <h3>Nothing to play yet</h3>
+
+      <p>
+        Experiences will appear here once creators
+        start publishing on Curl.
+      </p>
+
+    </div>
+
+  </section>
+
+  <section class="section">
+
+    <div class="section-heading">
+      <h2>Recently updated</h2>
+    </div>
+
+    <div class="card empty-state">
+
+      <div class="empty-icon updates" aria-hidden="true"></div>
+
+      <h3>Stay tuned</h3>
+
+      <p>
+        New experiences and updates will show up here.
+      </p>
+
+    </div>
+
+  </section>
+
+</main>
+
+<footer>
+  CURL · CREATE · PLAY · EXPLORE
+</footer>
+
+<script type="module" src="/assets/js/navbar.js"></script>
+
+</body>
+</html>

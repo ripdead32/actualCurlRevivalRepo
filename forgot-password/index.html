@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Password recovery — Curl</title>
+
+  <script src="/assets/js/theme.js"></script>
+  <link rel="stylesheet" href="/assets/css/global.css">
+  <link rel="stylesheet" href="/assets/css/auth.css">
+</head>
+<body>
+
+<header id="navbar"></header>
+
+<main class="auth-page">
+  <div class="card auth-card">
+
+    <div class="auth-logo">curl</div>
+
+    <div id="recovery-request">
+      <h1 class="auth-title">Forgot your password?</h1>
+
+      <p class="auth-description">
+        Enter your email address and we'll send you a recovery link.
+      </p>
+
+      <div id="auth-message"></div>
+
+      <form id="forgot-form">
+        <div class="form-group">
+          <label for="email">Email address</label>
+
+          <input
+            class="form-input"
+            id="email"
+            type="email"
+            placeholder="you@example.com"
+            required
+          >
+        </div>
+
+        <button class="btn btn-primary auth-submit">
+          Send recovery email
+        </button>
+      </form>
+    </div>
+
+    <div id="recovery-update" hidden>
+      <h1 class="auth-title">Choose a new password</h1>
+
+      <p class="auth-description">
+        Enter your new password below.
+      </p>
+
+      <div id="recovery-message"></div>
+
+      <form id="reset-form">
+        <div class="form-group">
+          <label for="new-password">New password</label>
+
+          <input
+            class="form-input"
+            id="new-password"
+            type="password"
+            minlength="8"
+            required
+          >
+        </div>
+
+        <button class="btn btn-primary auth-submit">
+          Update password
+        </button>
+      </form>
+    </div>
+
+    <div class="auth-bottom">
+      <a href="/login/">Back to login</a>
+    </div>
+
+  </div>
+</main>
+
+<footer>CURL · ACCOUNT RECOVERY</footer>
+
+<script type="module" src="/assets/js/navbar.js"></script>
+<script type="module" src="/assets/js/auth.js"></script>
+
+</body>
+</html>

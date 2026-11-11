@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — Curl</title>
+
+  <script src="/assets/js/theme.js"></script>
+  <link rel="stylesheet" href="/assets/css/global.css">
+</head>
+<body>
+
+<header id="navbar"></header>
+
+<main class="container page">
+
+  <h1 class="page-title">Settings</h1>
+  <p class="page-subtitle">Manage your Curl account.</p>
+
+  <section class="section card card-padding">
+
+    <h2 style="margin-top:0">Profile settings</h2>
+
+    <div id="settings-message"></div>
+
+    <form id="settings-form">
+
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input class="form-input" id="username"
+          minlength="3" maxlength="20"
+          pattern="[A-Za-z0-9_]+" required>
+      </div>
+
+      <div class="form-group">
+        <label for="bio">About me</label>
+        <textarea class="form-input" id="bio"
+          maxlength="300"
+          placeholder="Tell the community about yourself..."></textarea>
+      </div>
+
+      <button class="btn btn-primary">
+        Save changes
+      </button>
+
+    </form>
+
+  </section>
+
+  <section class="section card card-padding">
+    <h2 style="margin-top:0">Account</h2>
+
+    <p class="page-subtitle">
+      Your Curl ID is managed by Curl moderators.
+    </p>
+
+    <button id="logout-button" class="btn btn-danger"
+      style="margin-top:18px">
+      Log out
+    </button>
+  </section>
+
+</main>
+
+<footer>CURL · ACCOUNT SETTINGS</footer>
+
+<script type="module" src="/assets/js/navbar.js"></script>
+<script type="module" src="/assets/js/auth.js"></script>
+
+</body>
+</html>

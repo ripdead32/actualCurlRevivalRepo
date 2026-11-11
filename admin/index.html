@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — Curl</title>
+
+  <script src="/assets/js/theme.js"></script>
+  <link rel="stylesheet" href="/assets/css/global.css">
+  <link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body>
+
+<header id="navbar"></header>
+
+<main class="container page">
+
+  <h1 class="page-title">Admin panel</h1>
+
+  <p class="page-subtitle">
+    Manage Curl community accounts.
+  </p>
+
+  <section class="section card card-padding">
+
+    <h2 style="margin-top:0">User management</h2>
+
+    <div id="admin-message"></div>
+
+    <div class="admin-toolbar">
+      <input
+        id="user-search"
+        class="form-input"
+        placeholder="Search by username..."
+      >
+
+      <button id="search-button" class="btn btn-primary">
+        Search
+      </button>
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Curl ID</th>
+            <th>Rank</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody id="user-list">
+          <tr>
+            <td colspan="4">Loading accounts...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+
+</main>
+
+<footer>CURL · MODERATION</footer>
+
+<script type="module" src="/assets/js/navbar.js"></script>
+<script type="module" src="/assets/js/admin.js"></script>
+
+</body>
+</html>
