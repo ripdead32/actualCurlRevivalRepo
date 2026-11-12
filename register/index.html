@@ -5,34 +5,86 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up — Curl</title>
+
   <script src="/assets/js/theme.js"></script>
   <link rel="stylesheet" href="/assets/css/global.css">
+  <link rel="stylesheet" href="/assets/css/auth.css">
 </head>
 <body>
-  <header id="navbar"></header>
 
-  <main class="container page">
-    <div class="card card-padding">
-      <h1>Create an account</h1>
-      <p>Join the Curl community.</p>
+<header id="navbar"></header>
 
-      <form id="register-form">
-        <label for="username">Username</label>
-        <input id="username" type="text" required minlength="3" maxlength="20">
+<main class="auth-page">
+  <div class="card auth-card">
 
-        <label for="email">Email</label>
-        <input id="email" type="email" required>
-
-        <label for="password">Password</label>
-        <input id="password" type="password" required minlength="8">
-
-        <button type="submit" id="register-button">Create account</button>
-        <p id="register-message"></p>
-      </form>
+    <div class="auth-logo">
+      <img src="/assets/images/logo.png" alt="Curl">
     </div>
-  </main>
 
-  <script type="module" src="/assets/js/navbar.js"></script>
-  <script type="module" src="/assets/js/register.js"></script>
+    <h1 class="auth-title">Create an account</h1>
+
+    <p class="auth-description">
+      Join Curl and explore your world.
+    </p>
+
+    <div id="register-message"></div>
+
+    <form id="register-form">
+
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input
+          class="form-input"
+          id="username"
+          type="text"
+          placeholder="Choose a username"
+          required
+          autocomplete="username"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <input
+          class="form-input"
+          id="email"
+          type="email"
+          placeholder="you@example.com"
+          required
+          autocomplete="email"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          class="form-input"
+          id="password"
+          type="password"
+          placeholder="Create a password"
+          required
+          autocomplete="new-password"
+        >
+      </div>
+
+      <button class="btn btn-primary auth-submit" id="register-button" type="submit">
+        Create account
+      </button>
+
+    </form>
+
+    <div class="auth-bottom">
+      Already have an account?
+      <a href="/login/">Log in</a>
+    </div>
+
+  </div>
+</main>
+
+<footer>CURL · YOUR WORLD STARTS HERE</footer>
+
+<script type="module" src="/assets/js/navbar.js"></script>
+<script type="module" src="/assets/js/auth.js"></script>
+
 </body>
 </html>
