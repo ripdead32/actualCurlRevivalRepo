@@ -2,14 +2,91 @@
 import { supabase } from "./supabase.js";
 
 // ==========================================
+// BAN SYSTEM
+// ==========================================
+
+function isDeniedPage() {
+  return location.pathname.replace(/\/+$/, "").toLowerCase() === "/declined";
+}
+
+function redirectToDenied() {
+  if (!isDeniedPage()) {
+    location.replace("/Declined/");
+  }
+}
+
+function isBannedAuthError(error) {
+  return (
+    error?.code === "user_banned" ||
+    error?.message?.toLowerCase().includes("user banned") ||
+    error?.message?.toLowerCase().includes("user is banned")
+  );
+}
+
+export async function checkBanStatus(userId) {
+  if (!userId) return false;
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("is_banned")
+    .eq("id", userId)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Could not check ban status:", error);
+    return false;
+  }
+
+  if (data?.is_banned === true) {
+    redirectToDenied();
+    return true;
+  }
+
+  return false;
+}
+
+// Check existing sessions whenever this module loads.
+async function enforceBanStatus() {
+  if (isDeniedPage()) return;
+
+  try {
+    const { data, error } = await supabase.auth.getSession();
+
+    if (error) {
+      if (isBannedAuthError(error)) {
+        redirectToDenied();
+      } else {
+        console.error("Session check failed:", error);
+      }
+
+      return;
+    }
+
+    if (data.session) {
+      await checkBanStatus(data.session.user.id);
+    }
+  } catch (error) {
+    if (isBannedAuthError(error)) {
+      redirectToDenied();
+    } else {
+      console.error("Ban check failed:", error);
+    }
+  }
+}
+
+enforceBanStatus();
+
+// ==========================================
 // SHARED FUNCTIONS
 // ==========================================
 
 export async function getSession() {
-  const { data, error } =
-    await supabase.auth.getSession();
+  const { data, error } = await supabase.auth.getSession();
 
-  if (error) throw error;
+  if (error) {
+    if (isBannedAuthError(error)) redirectToDenied();
+    throw error;
+  }
 
   return data.session;
 }
@@ -31,6 +108,9 @@ export async function getCurrentProfile() {
 
   if (!session) return null;
 
+  const banned = await checkBanStatus(session.user.id);
+  if (banned) return null;
+
   return getProfile(session.user.id);
 }
 
@@ -50,17 +130,46 @@ export async function requireAuth() {
     return null;
   }
 
+  const banned = await checkBanStatus(session.user.id);
+
+  if (banned) return null;
+
   return session;
 }
 
-
 export async function requireModerator() {
-  const { data: { user }, error } = await supabase.auth.getUser();
+  let user;
 
-  if (error || !user) {
+  try {
+    const result = await supabase.auth.getUser();
+    user = result.data.user;
+
+    if (result.error) {
+      if (isBannedAuthError(result.error)) {
+        redirectToDenied();
+        return null;
+      }
+
+      throw result.error;
+    }
+  } catch (error) {
+    if (isBannedAuthError(error)) {
+      redirectToDenied();
+      return null;
+    }
+
     location.replace("/login/");
     return null;
   }
+
+  if (!user) {
+    location.replace("/login/");
+    return null;
+  }
+
+  const banned = await checkBanStatus(user.id);
+
+  if (banned) return null;
 
   if (user.app_metadata?.curl_mod !== true) {
     location.replace("/");
@@ -74,7 +183,6 @@ export async function requireModerator() {
     profile
   };
 }
-
 
 // ==========================================
 // MESSAGE HELPER
@@ -91,7 +199,9 @@ function showMessage(element, message, type = "error") {
 }
 
 function setLoading(form, loading) {
-  const button = form.querySelector('button[type="submit"], button:not([type])');
+  const button = form.querySelector(
+    'button[type="submit"], button:not([type])'
+  );
 
   if (!button) return;
 
@@ -124,17 +234,32 @@ if (loginForm) {
     setLoading(loginForm, true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
       });
 
-      if (error) throw error;
+      if (error) {
+        if (isBannedAuthError(error)) {
+          redirectToDenied();
+          return;
+        }
+
+        throw error;
+      }
+
+      const banned = await checkBanStatus(data.user.id);
+
+      if (banned) return;
 
       location.href = "/";
 
     } catch (error) {
-      showMessage(message, error.message);
+      if (isBannedAuthError(error)) {
+        redirectToDenied();
+      } else {
+        showMessage(message, error.message);
+      }
     } finally {
       setLoading(loginForm, false);
     }

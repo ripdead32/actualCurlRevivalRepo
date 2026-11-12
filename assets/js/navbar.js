@@ -6,6 +6,13 @@ async function initNavbar() {
 
   if (!navbar) return;
 
+  // =========================================
+  // DENIED PAGE CHECK
+  // =========================================
+
+  const isDeniedPage =
+    location.pathname.replace(/\/+$/, "").toLowerCase() === "/declined";
+
   try {
     const response = await fetch("/navbar.json");
 
@@ -23,17 +30,38 @@ async function initNavbar() {
     const session = data.session;
     let profile = null;
 
-    if (session) {
+    // =========================================
+    // BAN CHECK
+    // =========================================
+
+    if (session && !isDeniedPage) {
       const { data: result, error } = await supabase
         .from("profiles")
-        .select("username, rank")
+        .select("username, rank, is_banned")
         .eq("id", session.user.id)
         .single();
 
       if (error) throw error;
 
       profile = result;
+
+      if (profile.is_banned === true) {
+        location.replace("/Declined/");
+        return;
+      }
+    } else if (session && isDeniedPage) {
+      const { data: result, error } = await supabase
+        .from("profiles")
+        .select("username, rank")
+        .eq("id", session.user.id)
+        .single();
+
+      if (!error) profile = result;
     }
+
+    // =========================================
+    // NAVBAR CONTAINER
+    // =========================================
 
     const container = document.createElement("div");
     container.className = "nav-container";
