@@ -53,20 +53,28 @@ export async function requireAuth() {
   return session;
 }
 
+
 export async function requireModerator() {
-  const session = await requireAuth();
+  const { data: { user }, error } = await supabase.auth.getUser();
 
-  if (!session) return null;
-
-  const profile = await getProfile(session.user.id);
-
-  if (profile.rank !== "moderator") {
-    location.href = "/";
+  if (error || !user) {
+    location.replace("/login/");
     return null;
   }
 
-  return { session, profile };
+  if (user.app_metadata?.curl_mod !== true) {
+    location.replace("/");
+    return null;
+  }
+
+  const profile = await getProfile(user.id);
+
+  return {
+    session: await getSession(),
+    profile
+  };
 }
+
 
 // ==========================================
 // MESSAGE HELPER

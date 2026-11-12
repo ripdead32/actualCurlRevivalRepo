@@ -61,3 +61,22 @@
     align-items: flex-start;
   }
 }
+
+.profile-username-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 5px 0 12px;
+}
+
+.profile-username {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.profile-badge {
+  width: 19px;
+  height: 19px;
+  object-fit: contain;
+  flex-shrink: 0;
+}

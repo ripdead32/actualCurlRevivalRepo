@@ -15,9 +15,12 @@ async function initNavbar() {
 
     const config = await response.json();
 
-    const { data } = await supabase.auth.getSession();
-    const session = data.session;
+    const { data, error: sessionError } =
+      await supabase.auth.getSession();
 
+    if (sessionError) throw sessionError;
+
+    const session = data.session;
     let profile = null;
 
     if (session) {
@@ -35,7 +38,9 @@ async function initNavbar() {
     const container = document.createElement("div");
     container.className = "nav-container";
 
+    // =========================================
     // LOGO
+    // =========================================
 
     const brand = document.createElement("a");
     brand.className = "nav-brand";
@@ -44,6 +49,7 @@ async function initNavbar() {
     const logo = document.createElement("img");
     logo.src = config.branding.logo;
     logo.alt = config.branding.name;
+
     logo.onerror = () => {
       logo.remove();
       brand.textContent = config.branding.name;
@@ -52,13 +58,22 @@ async function initNavbar() {
     brand.appendChild(logo);
     container.appendChild(brand);
 
-    // NAVIGATION
+    // =========================================
+    // MAIN NAVIGATION
+    // =========================================
 
     const links = document.createElement("nav");
     links.className = "nav-links";
 
-    for (const item of config.navigation) {
-      if (!item.enabled) continue;
+    for (const item of config.navigation || []) {
+      if (item.enabled === false) continue;
+
+      if (
+        item.permission === "curl_mod" &&
+        session?.user.app_metadata?.curl_mod !== true
+      ) {
+        continue;
+      }
 
       const link = document.createElement("a");
 
@@ -78,7 +93,9 @@ async function initNavbar() {
 
     container.appendChild(links);
 
+    // =========================================
     // ACTIONS
+    // =========================================
 
     const actions = document.createElement("div");
     actions.className = "nav-actions";
@@ -112,9 +129,11 @@ async function initNavbar() {
 
     actions.appendChild(themeButton);
 
-    if (session && profile) {
-      // ACCOUNT
+    // =========================================
+    // ACCOUNT
+    // =========================================
 
+    if (session && profile) {
       const account = document.createElement("a");
 
       account.className = "nav-user";
@@ -133,34 +152,40 @@ async function initNavbar() {
       account.append(avatar, username);
       actions.appendChild(account);
 
-      for (const item of config.account.loggedIn) {
+      // LOGGED-IN LINKS
+
+      for (const item of config.account.loggedIn || []) {
+        if (item.enabled === false) continue;
+
+        if (
+          item.permission === "curl_mod" &&
+          session.user.app_metadata?.curl_mod !== true
+        ) {
+          continue;
+        }
+
         const link = document.createElement("a");
 
         link.className = "nav-link";
         link.href = item.url;
         link.textContent = item.name;
 
-        if (item.url === "/profile/") {
-          link.href +=
-            "?username=" +
-            encodeURIComponent(profile.username);
+        if (
+          location.pathname === item.url ||
+          (item.url !== "/" && location.pathname.startsWith(item.url))
+        ) {
+          link.classList.add("active");
         }
 
         actions.appendChild(link);
       }
 
-      if (profile.rank === "moderator") {
-        const admin = document.createElement("a");
-
-        admin.className = "nav-link";
-        admin.href = "/admin/";
-        admin.textContent = "Admin";
-
-        actions.appendChild(admin);
-      }
-
     } else {
-      for (const item of config.account.loggedOut) {
+      // LOGGED-OUT LINKS
+
+      for (const item of config.account.loggedOut || []) {
+        if (item.enabled === false) continue;
+
         const link = document.createElement("a");
 
         link.href = item.url;
@@ -178,7 +203,9 @@ async function initNavbar() {
 
     container.appendChild(actions);
 
+    // =========================================
     // MOBILE MENU
+    // =========================================
 
     const menu = document.createElement("button");
 

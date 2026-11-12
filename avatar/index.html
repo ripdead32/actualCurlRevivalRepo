@@ -1,0 +1,535 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#100e16">
+  <title>Avatar Editor — Curl</title>
+
+  <script src="/assets/js/theme.js"></script>
+  <link rel="stylesheet" href="/assets/css/global.css">
+
+  <style>
+    .avatar-heading {
+      margin-bottom: 25px;
+    }
+
+    .avatar-heading h1 {
+      font-size: 34px;
+      letter-spacing: -1.5px;
+      margin: 0 0 8px;
+    }
+
+    .avatar-heading p {
+      color: var(--muted);
+      margin: 0;
+      font-size: 13px;
+    }
+
+    .avatar-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(280px, .8fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .avatar-preview,
+    .avatar-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      overflow: hidden;
+    }
+
+    .preview-header,
+    .panel-header {
+      padding: 16px 19px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .preview-header h2,
+    .panel-header h2 {
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .rig-label {
+      font-size: 10px;
+      padding: 6px 9px;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border-radius: 5px;
+    }
+
+    #avatar-canvas {
+      display: block;
+      width: 100%;
+      height: 510px;
+      background: var(--surface-2);
+    }
+
+    .preview-controls {
+      display: flex;
+      justify-content: center;
+      gap: 9px;
+      padding: 13px;
+      border-top: 1px solid var(--border);
+    }
+
+    .preview-controls button,
+    .avatar-actions button {
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      border-radius: 7px;
+      padding: 9px 13px;
+      cursor: pointer;
+      font: inherit;
+      font-size: 11px;
+    }
+
+    .panel-content {
+      padding: 18px;
+    }
+
+    .section-title {
+      font-size: 12px;
+      font-weight: 700;
+      margin: 0 0 12px;
+    }
+
+    .equipped-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .equipped-empty {
+      border: 1px dashed var(--border);
+      border-radius: 9px;
+      padding: 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .equipped-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px;
+    }
+
+    .equipped-item strong {
+      display: block;
+      font-size: 12px;
+    }
+
+    .equipped-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 4px;
+    }
+
+    .remove-item {
+      color: var(--muted);
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      font-size: 11px;
+    }
+
+    .panel-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 20px 0;
+    }
+
+    .editor-setting {
+      margin-bottom: 16px;
+    }
+
+    .editor-setting label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .editor-setting select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--text);
+      background: var(--surface-2);
+      outline: none;
+    }
+
+    .avatar-actions {
+      display: flex;
+      gap: 9px;
+      margin-top: 20px;
+    }
+
+    .avatar-actions button {
+      flex: 1;
+    }
+
+    .avatar-actions .primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .editor-status {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
+      margin-top: 13px;
+      min-height: 18px;
+    }
+
+    .catalog-link {
+      display: inline-block;
+      margin-top: 14px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 11px;
+    }
+
+    @media (max-width: 800px) {
+      .avatar-layout {
+        grid-template-columns: 1fr;
+      }
+
+      #avatar-canvas {
+        height: 430px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header id="navbar"></header>
+
+<main class="container page">
+
+  <section class="avatar-heading">
+    <h1>Avatar Editor.</h1>
+    <p>Customize your character and build your own look.</p>
+  </section>
+
+  <div class="avatar-layout">
+
+    <section class="avatar-preview">
+
+      <div class="preview-header">
+        <h2>Character Preview</h2>
+        <span class="rig-label">R15</span>
+      </div>
+
+      <canvas id="avatar-canvas"></canvas>
+
+      <div class="preview-controls">
+        <button id="rotate-left">Rotate left</button>
+        <button id="rotate-reset">Reset view</button>
+        <button id="rotate-right">Rotate right</button>
+      </div>
+
+    </section>
+
+    <section class="avatar-panel">
+
+      <div class="panel-header">
+        <h2>Customize</h2>
+        <span class="rig-label">R15 RIG</span>
+      </div>
+
+      <div class="panel-content">
+
+        <h3 class="section-title">Equipped items</h3>
+
+        <div class="equipped-list" id="equipped-list">
+          <div class="equipped-empty">
+            No items selected yet.<br>
+            Browse the Catalog to find items.
+          </div>
+        </div>
+
+        <a class="catalog-link" href="/catalog/">
+          Browse the Catalog →
+        </a>
+
+        <div class="panel-divider"></div>
+
+        <h3 class="section-title">Character settings</h3>
+
+        <div class="editor-setting">
+          <label for="rig-type">Avatar rig</label>
+          <select id="rig-type">
+            <option value="R15" selected>R15</option>
+          </select>
+        </div>
+
+        <div class="editor-setting">
+          <label for="body-type">Body type</label>
+          <select id="body-type">
+            <option value="0">Classic</option>
+            <option value="1">R15 body type</option>
+          </select>
+        </div>
+
+        <div class="editor-setting">
+          <label for="avatar-scale">Character scale</label>
+          <select id="avatar-scale">
+            <option value="1">Normal</option>
+            <option value="0.9">Small</option>
+            <option value="1.1">Large</option>
+          </select>
+        </div>
+
+        <div class="avatar-actions">
+          <button id="reset-avatar">Reset</button>
+          <button class="primary" id="save-avatar">Save outfit</button>
+        </div>
+
+        <p class="editor-status" id="editor-status">
+          Preview renderer is waiting for an R15 model.
+        </p>
+
+      </div>
+    </section>
+
+  </div>
+
+</main>
+
+<footer>
+  CURL · CREATE · PLAY · EXPLORE
+</footer>
+
+<script type="module" src="/assets/js/navbar.js"></script>
+
+<script type="module">
+  import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+
+  const canvas = document.getElementById("avatar-canvas");
+  const status = document.getElementById("editor-status");
+  const equippedList = document.getElementById("equipped-list");
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x191620);
+
+  const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+  camera.position.set(0, 2.4, 7);
+
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias: true,
+    alpha: false
+  });
+
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x777080, 2));
+
+  const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
+  keyLight.position.set(3, 6, 5);
+  scene.add(keyLight);
+
+  const floor = new THREE.Mesh(
+    new THREE.CircleGeometry(2.5, 64),
+    new THREE.MeshStandardMaterial({
+      color: 0x292432,
+      roughness: 1
+    })
+  );
+
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.y = -0.05;
+  scene.add(floor);
+
+  const character = new THREE.Group();
+  scene.add(character);
+
+  let rotation = 0;
+
+  function resize() {
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+
+    renderer.setSize(width, height, false);
+
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+  }
+
+  window.addEventListener("resize", resize);
+  resize();
+
+  // The renderer is ready, but no character is fabricated here.
+  // A real R15 model must be loaded from a compatible model pipeline.
+
+  function animate() {
+    requestAnimationFrame(animate);
+    character.rotation.y = rotation;
+    renderer.render(scene, camera);
+  }
+
+  animate();
+
+  document.getElementById("rotate-left").addEventListener("click", () => {
+    rotation -= Math.PI / 8;
+  });
+
+  document.getElementById("rotate-right").addEventListener("click", () => {
+    rotation += Math.PI / 8;
+  });
+
+  document.getElementById("rotate-reset").addEventListener("click", () => {
+    rotation = 0;
+  });
+
+  function readSelectedItem() {
+    try {
+      return JSON.parse(
+        localStorage.getItem("curl-selected-avatar-item") || "null"
+      );
+    } catch {
+      return null;
+    }
+  }
+
+  let equipped = [];
+
+  function renderEquipped() {
+    equippedList.replaceChildren();
+
+    if (!equipped.length) {
+      const empty = document.createElement("div");
+      empty.className = "equipped-empty";
+      empty.textContent = "No items equipped yet. Browse the Catalog to select items.";
+      equippedList.appendChild(empty);
+      return;
+    }
+
+    equipped.forEach(item => {
+      const row = document.createElement("div");
+      row.className = "equipped-item";
+
+      const info = document.createElement("div");
+
+      const name = document.createElement("strong");
+      name.textContent = item.name;
+
+      const id = document.createElement("span");
+      id.textContent = "Asset ID: " + item.id;
+
+      info.append(name, id);
+
+      const remove = document.createElement("button");
+      remove.className = "remove-item";
+      remove.textContent = "Remove";
+
+      remove.addEventListener("click", () => {
+        equipped = equipped.filter(entry => entry.id !== item.id);
+        renderEquipped();
+        saveLocalDraft();
+      });
+
+      row.append(info, remove);
+      equippedList.appendChild(row);
+    });
+  }
+
+  function saveLocalDraft() {
+    const draft = {
+      rig: "R15",
+      bodyType: document.getElementById("body-type").value,
+      scale: document.getElementById("avatar-scale").value,
+      equipped
+    };
+
+    localStorage.setItem("curl-avatar-draft", JSON.stringify(draft));
+  }
+
+  function loadDraft() {
+    try {
+      const draft = JSON.parse(
+        localStorage.getItem("curl-avatar-draft") || "null"
+      );
+
+      if (draft) {
+        equipped = Array.isArray(draft.equipped) ? draft.equipped : [];
+
+        document.getElementById("body-type").value =
+          draft.bodyType ?? "0";
+
+        document.getElementById("avatar-scale").value =
+          draft.scale ?? "1";
+      }
+    } catch {
+      equipped = [];
+    }
+
+    renderEquipped();
+  }
+
+  function importCatalogSelection() {
+    const item = readSelectedItem();
+
+    if (!item) return;
+
+    if (!equipped.some(entry => entry.id === item.id)) {
+      equipped.push(item);
+      renderEquipped();
+      saveLocalDraft();
+      status.textContent = item.name + " added to your outfit list.";
+    }
+  }
+
+  document.getElementById("save-avatar").addEventListener("click", () => {
+    saveLocalDraft();
+    status.textContent =
+      "Draft saved in this browser. Account outfit saving is not connected yet.";
+  });
+
+  document.getElementById("reset-avatar").addEventListener("click", () => {
+    equipped = [];
+
+    localStorage.removeItem("curl-avatar-draft");
+    localStorage.removeItem("curl-selected-avatar-item");
+
+    renderEquipped();
+
+    document.getElementById("body-type").value = "0";
+    document.getElementById("avatar-scale").value = "1";
+
+    status.textContent = "Your local outfit draft was reset.";
+  });
+
+  document.getElementById("body-type").addEventListener("change", saveLocalDraft);
+  document.getElementById("avatar-scale").addEventListener("change", saveLocalDraft);
+
+  loadDraft();
+  importCatalogSelection();
+
+  status.textContent =
+    "R15 preview renderer initialized. A compatible R15 model is still required.";
+</script>
+
+</body>
+</html>

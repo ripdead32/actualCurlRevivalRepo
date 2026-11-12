@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search — Curl</title>
+
+  <script src="/assets/js/theme.js"></script>
+
+  <link rel="stylesheet" href="/assets/css/global.css">
+  <link rel="stylesheet" href="/assets/css/search.css">
+</head>
+<body>
+  <header id="navbar"></header>
+
+  <main class="container page">
+    <div class="search-heading">
+      <div>
+        <h1 class="page-title">Search</h1>
+        <p class="page-subtitle">
+          Discover people and games across Curl.
+        </p>
+      </div>
+    </div>
+
+    <section class="search-panel card card-padding">
+      <div class="search-input-wrap">
+        <span class="search-icon" aria-hidden="true">⌕</span>
+        <input
+          id="search-input"
+          class="form-input"
+          type="search"
+          placeholder="Search people and games..."
+          autocomplete="off"
+        >
+        <button id="clear-search" class="clear-search" type="button"
+          aria-label="Clear search" hidden>
+          ×
+        </button>
+      </div>
+
+      <div class="search-tabs" role="tablist" aria-label="Search category">
+        <button class="search-tab active" data-filter="all" role="tab"
+          aria-selected="true">All</button>
+        <button class="search-tab" data-filter="people" role="tab"
+          aria-selected="false">People</button>
+        <button class="search-tab" data-filter="games" role="tab"
+          aria-selected="false">Games</button>
+      </div>
+    </section>
+
+    <div id="search-status" class="search-status" aria-live="polite">
+      Start typing to search Curl.
+    </div>
+
+    <section id="people-section" class="search-section">
+      <div class="section-heading">
+        <h2>People</h2>
+        <span id="people-count" class="result-count"></span>
+      </div>
+
+      <div id="people-results" class="people-grid"></div>
+    </section>
+
+    <section id="games-section" class="search-section">
+      <div class="section-heading">
+        <h2>Games</h2>
+        <span id="games-count" class="result-count"></span>
+      </div>
+
+      <div id="games-results" class="games-grid">
+        <div class="empty-state card">
+          Game search will be available when the games table is connected.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>CURL · SEARCH</footer>
+
+  <script type="module" src="/assets/js/navbar.js"></script>
+  <script type="module" src="/assets/js/search.js"></script>
+</body>
+</html>

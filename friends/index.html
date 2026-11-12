@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Friends — Curl</title>
+
+  <script src="/assets/js/theme.js"></script>
+  <link rel="stylesheet" href="/assets/css/global.css">
+  <link rel="stylesheet" href="/assets/css/friends.css">
+</head>
+<body>
+  <header id="navbar"></header>
+
+  <main class="container page">
+    <div class="friends-heading">
+      <div>
+        <h1 class="page-title">Friends</h1>
+        <p class="page-subtitle">
+          Connect with people and manage your friendships.
+        </p>
+      </div>
+    </div>
+
+    <section class="friends-panel card">
+      <div class="friends-toolbar">
+        <div class="friends-tabs" role="tablist" aria-label="Friend categories">
+          <button class="friends-tab active" data-tab="friends"
+            role="tab" aria-selected="true">All Friends</button>
+
+          <button class="friends-tab" data-tab="incoming"
+            role="tab" aria-selected="false">Incoming</button>
+
+          <button class="friends-tab" data-tab="outgoing"
+            role="tab" aria-selected="false">Outgoing</button>
+        </div>
+
+        <div class="friends-search">
+          <input
+            id="friends-search"
+            class="form-input"
+            type="search"
+            placeholder="Find a friend..."
+            autocomplete="off"
+          >
+        </div>
+      </div>
+
+      <div class="friends-content">
+        <div id="friends-list" class="friends-list">
+          <div class="friends-empty">
+            <div class="empty-icon">◎</div>
+            <h2>Your friends will appear here</h2>
+            <p>Search for people on Curl and send them a friend request.</p>
+            <a href="/search/" class="btn btn-primary">Find People</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>CURL · FRIENDS</footer>
+
+  <script type="module" src="/assets/js/navbar.js"></script>
+  <script type="module" src="/assets/js/friends.js"></script>
+</body>
+</html>

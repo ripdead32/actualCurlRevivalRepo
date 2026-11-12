@@ -1,0 +1,227 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#100e16">
+  <title>Account Restricted — Curl</title>
+
+  <script src="/assets/js/theme.js"></script>
+  <link rel="stylesheet" href="/assets/css/global.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+    }
+
+    .denied-header {
+      height: 76px;
+      display: flex;
+      align-items: center;
+      padding: 0 6%;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .denied-header img {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+    }
+
+    .denied-main {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      padding: 55px 20px;
+    }
+
+    .denied-card {
+      width: 100%;
+      max-width: 590px;
+      padding: 42px;
+      border-radius: 15px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: 0 15px 55px rgba(0, 0, 0, .12);
+    }
+
+    .denied-symbol {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: rgba(239, 68, 68, .10);
+      border: 1px solid rgba(239, 68, 68, .2);
+      margin-bottom: 25px;
+    }
+
+    .denied-symbol::before {
+      content: "!";
+      color: #ef6464;
+      font-size: 34px;
+      font-weight: 800;
+    }
+
+    .denied-label {
+      color: #ef6464;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .denied-card h1 {
+      font-size: clamp(27px, 5vw, 36px);
+      letter-spacing: -1px;
+      margin: 0 0 15px;
+    }
+
+    .denied-description {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+      margin: 0;
+    }
+
+    .denied-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 30px 0 24px;
+    }
+
+    .denied-details {
+      padding: 17px;
+      border-radius: 9px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+    }
+
+    .denied-details strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    .denied-details p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    .denied-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .denied-footer {
+      padding: 22px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 550px) {
+      .denied-card {
+        padding: 28px 23px;
+      }
+
+      .denied-header {
+        padding: 0 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="denied-header">
+    <a href="/" aria-label="Curl homepage">
+      <img src="/assets/images/logo.png" alt="Curl">
+    </a>
+  </header>
+
+  <main class="denied-main">
+
+    <section class="denied-card">
+
+      <div class="denied-symbol" aria-hidden="true"></div>
+
+      <div class="denied-label" id="denied-label">
+        Account restriction
+      </div>
+
+      <h1 id="denied-title">Account Restricted</h1>
+
+      <p class="denied-description" id="denied-description">
+        This Curl account is currently unavailable.
+        Access has been disabled following an account
+        moderation or removal decision.
+      </p>
+
+      <div class="denied-divider"></div>
+
+      <div class="denied-details">
+        <strong>What does this mean?</strong>
+        <p id="denied-details">
+          You cannot access this account or its associated
+          features. If you believe this decision was made
+          in error, contact the Curl moderation team.
+        </p>
+      </div>
+
+      <div class="denied-actions">
+        <a href="/" class="btn btn-primary">
+          Return to Curl
+        </a>
+
+        <a href="/login/" class="btn btn-secondary">
+          Log in to another account
+        </a>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="denied-footer">
+    CURL · ACCOUNT MODERATION
+  </footer>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const type = params.get("type");
+
+    const title = document.getElementById("denied-title");
+    const label = document.getElementById("denied-label");
+    const description = document.getElementById("denied-description");
+    const details = document.getElementById("denied-details");
+
+    if (type === "deleted") {
+      label.textContent = "Account removal";
+      title.textContent = "Account Deleted";
+
+      description.textContent =
+        "This Curl account has been deleted and is no longer available.";
+
+      details.textContent =
+        "The account and its associated profile are no longer accessible.";
+    }
+  </script>
+
+</body>
+</html>

@@ -4,26 +4,7 @@
     "name": "curl",
     "logo": "/assets/images/logo.png"
   },
-  "navigation": [
-    {
-      "name": "Discover",
-      "url": "/",
-      "icon": "compass",
-      "enabled": true
-    },
-    {
-      "name": "Marketplace",
-      "url": "/marketplace/",
-      "icon": "shopping-bag",
-      "enabled": false
-    },
-    {
-      "name": "Create",
-      "url": "/create/",
-      "icon": "plus-square",
-      "enabled": false
-    }
-  ],
+  "navigation": [],
   "account": {
     "loggedOut": [
       {
@@ -35,11 +16,54 @@
         "url": "/register/"
       }
     ],
-"loggedIn": [
-  {
-    "name": "Settings",
-    "url": "/settings/"
-  }
+    "loggedIn": [
+      {
+        "name": "Discover",
+        "url": "/",
+        "icon": "compass"
+      },
+      {
+        "name": "Catalog",
+        "url": "/catalog/",
+        "icon": "grid"
+      },
+      {
+        "name": "Avatar",
+        "url": "/avatar/",
+        "icon": "user"
+      },
+      {
+        "name": "Search",
+        "url": "/search/",
+        "icon": "search"
+      },
+      {
+        "name": "Friends",
+        "url": "/friends/",
+        "icon": "users"
+      },
+      {
+        "name": "Chat",
+        "url": "/chat/",
+        "icon": "message-circle"
+      },
+      {
+        "name": "Create",
+        "url": "/create/",
+        "icon": "plus-square",
+        "enabled": false
+      },
+      {
+        "name": "Settings",
+        "url": "/settings/",
+        "icon": "settings"
+      },
+      {
+        "name": "Admin",
+        "url": "/admin/",
+        "icon": "shield-check",
+        "permission": "curl_mod"
+      }
     ]
   }
 }

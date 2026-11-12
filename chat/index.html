@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat — Curl</title>
+
+  <script src="/assets/js/theme.js"></script>
+  <link rel="stylesheet" href="/assets/css/global.css">
+  <link rel="stylesheet" href="/assets/css/chat.css">
+</head>
+<body>
+  <header id="navbar"></header>
+
+  <main class="container page chat-page">
+    <div class="chat-heading">
+      <div>
+        <h1 class="page-title">Chat</h1>
+        <p class="page-subtitle">
+          Talk with your friends on Curl.
+        </p>
+      </div>
+    </div>
+
+    <section class="chat-layout card">
+      <aside class="chat-sidebar" id="chat-sidebar">
+        <div class="chat-sidebar-header">
+          <h2>Messages</h2>
+          <span id="conversation-count">0</span>
+        </div>
+
+        <div class="chat-search">
+          <input
+            id="chat-search"
+            class="form-input"
+            type="search"
+            placeholder="Search conversations..."
+            autocomplete="off"
+          >
+        </div>
+
+        <div id="conversation-list" class="conversation-list">
+          <div class="conversation-empty">
+            <div class="conversation-empty-icon">✉</div>
+            <p>No conversations yet.</p>
+            <a href="/friends/">Find friends</a>
+          </div>
+        </div>
+      </aside>
+
+      <section class="chat-main" id="chat-main">
+        <div id="chat-placeholder" class="chat-placeholder">
+          <div class="chat-placeholder-icon">✉</div>
+          <h2>Your conversations</h2>
+          <p>
+            Select a conversation to start chatting with your friends.
+          </p>
+          <a href="/friends/" class="btn btn-primary">
+            View Friends
+          </a>
+        </div>
+
+        <div id="chat-conversation" class="chat-conversation" hidden>
+          <header class="conversation-header">
+            <button id="back-to-conversations"
+              class="chat-back" type="button"
+              aria-label="Back to conversations">
+              ←
+            </button>
+
+            <div id="active-avatar" class="active-avatar"></div>
+
+            <div class="active-user-info">
+              <h2 id="active-name">Username</h2>
+              <span id="active-username">@username</span>
+            </div>
+          </header>
+
+          <div id="message-list" class="message-list">
+            <div class="message-empty">
+              Your conversation will appear here.
+            </div>
+          </div>
+
+          <form id="message-form" class="message-composer">
+            <input
+              id="message-input"
+              class="form-input"
+              type="text"
+              placeholder="Write a message..."
+              maxlength="2000"
+              autocomplete="off"
+              disabled
+            >
+
+            <button class="send-message" type="submit" disabled
+              aria-label="Send message">
+              <span>↑</span>
+            </button>
+          </form>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer>CURL · CHAT</footer>
+
+  <script type="module" src="/assets/js/navbar.js"></script>
+  <script type="module" src="/assets/js/chat.js"></script>
+</body>
+</html>

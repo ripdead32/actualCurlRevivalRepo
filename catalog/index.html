@@ -1,0 +1,723 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#100e16">
+  <meta name="description" content="Browse avatar items on Curl.">
+  <title>Catalog — Curl</title>
+
+  <script src="/assets/js/theme.js"></script>
+  <link rel="stylesheet" href="/assets/css/global.css">
+
+  <style>
+    .catalog-hero {
+      padding: 38px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background:
+        radial-gradient(ellipse at 90% 10%, rgba(167,139,250,.2), transparent 45%),
+        var(--surface);
+      margin-bottom: 28px;
+    }
+
+    .catalog-hero h1 {
+      font-size: clamp(30px, 5vw, 42px);
+      letter-spacing: -1.8px;
+      margin: 0 0 10px;
+    }
+
+    .catalog-hero p {
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.7;
+    }
+
+    .catalog-toolbar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .catalog-search {
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .catalog-search input,
+    .catalog-sort {
+      width: 100%;
+      height: 45px;
+      padding: 0 14px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      outline: none;
+    }
+
+    .catalog-search input:focus,
+    .catalog-sort:focus {
+      border-color: var(--accent);
+    }
+
+    .catalog-sort {
+      width: 180px;
+    }
+
+    .category-list {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+
+    .category-button {
+      padding: 9px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--muted);
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+      transition: .2s;
+    }
+
+    .category-button:hover,
+    .category-button.active {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .catalog-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 17px;
+    }
+
+    .catalog-heading h2 {
+      font-size: 20px;
+      margin: 0;
+    }
+
+    .result-count {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .item-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 17px;
+    }
+
+    .item-card {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface);
+      transition: transform .2s, border-color .2s;
+    }
+
+    .item-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+    }
+
+    .item-thumbnail {
+      height: 190px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .item-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 12px;
+    }
+
+    .item-placeholder {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .item-info {
+      padding: 13px;
+    }
+
+    .item-info h3 {
+      font-size: 13px;
+      margin: 0 0 7px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .item-creator {
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 12px;
+    }
+
+    .item-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .item-price {
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .item-type {
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 5px 7px;
+      border-radius: 5px;
+      font-size: 10px;
+    }
+
+    .item-actions {
+      display: flex;
+      gap: 7px;
+      margin-top: 13px;
+    }
+
+    .item-actions button,
+    .item-actions a {
+      flex: 1;
+      min-width: 0;
+      text-align: center;
+      padding: 9px 5px;
+      border-radius: 7px;
+      font-size: 11px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .select-item {
+      color: white;
+      background: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    .open-item {
+      color: var(--text);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+    }
+
+    .catalog-state {
+      grid-column: 1 / -1;
+      padding: 65px 20px;
+      text-align: center;
+      border: 1px dashed var(--border);
+      border-radius: 13px;
+      background: var(--surface);
+    }
+
+    .catalog-state h3 {
+      margin: 0 0 8px;
+      font-size: 17px;
+    }
+
+    .catalog-state p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    .catalog-state button {
+      margin-top: 15px;
+      padding: 9px 15px;
+      border-radius: 7px;
+      background: var(--accent);
+      color: white;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    .pagination button {
+      padding: 10px 17px;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .pagination button:disabled {
+      opacity: .4;
+      cursor: not-allowed;
+    }
+
+    .catalog-note {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 25px;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .catalog-hero { padding: 27px 22px; }
+      .catalog-sort { width: 100%; }
+      .item-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .item-thumbnail { height: 155px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<header id="navbar"></header>
+
+<main class="container page">
+
+  <section class="catalog-hero">
+    <h1>Avatar Catalog.</h1>
+    <p>
+      Find new items for your avatar.
+      Explore clothing, accessories, hair, faces and more.
+    </p>
+  </section>
+
+  <section>
+
+    <div class="catalog-toolbar">
+      <div class="catalog-search">
+        <input
+          type="search"
+          id="catalog-search"
+          placeholder="Search avatar items..."
+          aria-label="Search avatar items"
+        >
+      </div>
+
+      <select id="catalog-sort" class="catalog-sort">
+        <option value="0">Relevance</option>
+        <option value="1">Most favorited</option>
+        <option value="2">Best selling</option>
+        <option value="4">Price: Low to high</option>
+        <option value="5">Price: High to low</option>
+      </select>
+    </div>
+
+    <div class="category-list" id="category-list">
+      <button class="category-button active" data-category="all">All</button>
+      <button class="category-button" data-category="9">Hats</button>
+      <button class="category-button" data-category="20">Hair</button>
+      <button class="category-button" data-category="10">Faces</button>
+      <button class="category-button" data-category="15">Heads</button>
+      <button class="category-button" data-category="56">Shirts</button>
+      <button class="category-button" data-category="57">Pants</button>
+      <button class="category-button" data-category="55">T-Shirts</button>
+      <button class="category-button" data-category="21">Face accessories</button>
+      <button class="category-button" data-category="22">Neck accessories</button>
+      <button class="category-button" data-category="23">Shoulder accessories</button>
+      <button class="category-button" data-category="24">Front accessories</button>
+      <button class="category-button" data-category="25">Back accessories</button>
+      <button class="category-button" data-category="26">Waist accessories</button>
+      <button class="category-button" data-category="27">Animations</button>
+    </div>
+
+    <div class="catalog-heading">
+      <h2 id="catalog-title">All items</h2>
+      <span class="result-count" id="result-count">Loading...</span>
+    </div>
+
+    <div class="item-grid" id="item-grid">
+      <div class="catalog-state">
+        <h3>Loading catalog</h3>
+        <p>Fetching items from the Roblox Marketplace...</p>
+      </div>
+    </div>
+
+    <div class="pagination">
+      <button id="previous-page" disabled>Previous</button>
+      <button id="next-page" disabled>Next</button>
+    </div>
+
+    <p class="catalog-note">
+      Catalog item information and thumbnails are retrieved from Roblox.
+    </p>
+
+  </section>
+
+</main>
+
+<footer>
+  CURL · CREATE · PLAY · EXPLORE
+</footer>
+
+<script type="module" src="/assets/js/navbar.js"></script>
+
+<script>
+  const API = "https://catalog.roblox.com/v1/search/items/details";
+  const THUMBNAILS = "https://thumbnails.roblox.com/v1/assets";
+
+  const grid = document.getElementById("item-grid");
+  const search = document.getElementById("catalog-search");
+  const sort = document.getElementById("catalog-sort");
+  const count = document.getElementById("result-count");
+  const title = document.getElementById("catalog-title");
+
+  const previousButton = document.getElementById("previous-page");
+  const nextButton = document.getElementById("next-page");
+
+  const categoryButtons = document.querySelectorAll(".category-button");
+
+  const categoryNames = {
+    all: "All items",
+    9: "Hats",
+    20: "Hair",
+    10: "Faces",
+    15: "Heads",
+    56: "Classic shirts",
+    57: "Classic pants",
+    55: "T-shirts",
+    21: "Face accessories",
+    22: "Neck accessories",
+    23: "Shoulder accessories",
+    24: "Front accessories",
+    25: "Back accessories",
+    26: "Waist accessories",
+    27: "Animations"
+  };
+
+  let activeCategory = "all";
+  let nextCursor = null;
+  let previousCursors = [];
+  let currentRequest = 0;
+
+  function showState(heading, message, retry = false) {
+    grid.replaceChildren();
+
+    const state = document.createElement("div");
+    state.className = "catalog-state";
+
+    const h3 = document.createElement("h3");
+    h3.textContent = heading;
+
+    const p = document.createElement("p");
+    p.textContent = message;
+
+    state.append(h3, p);
+
+    if (retry) {
+      const button = document.createElement("button");
+      button.textContent = "Try again";
+      button.addEventListener("click", loadCatalog);
+      state.appendChild(button);
+    }
+
+    grid.appendChild(state);
+  }
+
+  function createItemCard(item, thumbnail) {
+    const card = document.createElement("article");
+    card.className = "item-card";
+
+    const imageArea = document.createElement("div");
+    imageArea.className = "item-thumbnail";
+
+    if (thumbnail) {
+      const image = document.createElement("img");
+      image.src = thumbnail;
+      image.alt = item.name;
+      image.loading = "lazy";
+
+      image.onerror = () => {
+        image.remove();
+        const fallback = document.createElement("span");
+        fallback.className = "item-placeholder";
+        fallback.textContent = "Preview unavailable";
+        imageArea.appendChild(fallback);
+      };
+
+      imageArea.appendChild(image);
+    } else {
+      const fallback = document.createElement("span");
+      fallback.className = "item-placeholder";
+      fallback.textContent = "Preview unavailable";
+      imageArea.appendChild(fallback);
+    }
+
+    const info = document.createElement("div");
+    info.className = "item-info";
+
+    const heading = document.createElement("h3");
+    heading.textContent = item.name;
+
+    const creator = document.createElement("div");
+    creator.className = "item-creator";
+    creator.textContent = "By " + (item.creatorName || "Unknown creator");
+
+    const meta = document.createElement("div");
+    meta.className = "item-meta";
+
+    const price = document.createElement("span");
+    price.className = "item-price";
+
+    if (item.priceStatus === "Free" || item.price === 0) {
+      price.textContent = "Free";
+    } else if (typeof item.price === "number") {
+      price.textContent = item.price.toLocaleString() + " R$";
+    } else {
+      price.textContent = item.priceStatus === "OffSale"
+        ? "Off sale"
+        : "Price unavailable";
+    }
+
+    const type = document.createElement("span");
+    type.className = "item-type";
+    type.textContent = item.itemType || "Asset";
+
+    meta.append(price, type);
+
+    const actions = document.createElement("div");
+    actions.className = "item-actions";
+
+    const selectButton = document.createElement("button");
+    selectButton.className = "select-item";
+    selectButton.textContent = "Select";
+
+    selectButton.addEventListener("click", () => {
+      const selected = {
+        id: item.id,
+        name: item.name,
+        assetType: item.assetType,
+        itemType: item.itemType
+      };
+
+      try {
+        localStorage.setItem(
+          "curl-selected-avatar-item",
+          JSON.stringify(selected)
+        );
+
+        selectButton.textContent = "Selected";
+        selectButton.disabled = true;
+
+      } catch {
+        alert("Unable to save this selection in your browser.");
+      }
+    });
+
+    const openButton = document.createElement("a");
+    openButton.className = "open-item";
+    openButton.textContent = "View";
+    openButton.href =
+      "https://www.roblox.com/catalog/" +
+      encodeURIComponent(item.id);
+
+    openButton.target = "_blank";
+    openButton.rel = "noopener noreferrer";
+
+    actions.append(selectButton, openButton);
+
+    info.append(heading, creator, meta, actions);
+    card.append(imageArea, info);
+
+    return card;
+  }
+
+  async function loadThumbnails(items) {
+    const ids = items
+      .filter(item => item.itemType === "Asset")
+      .map(item => item.id);
+
+    if (!ids.length) return {};
+
+    const params = new URLSearchParams({
+      assetIds: ids.join(","),
+      size: "150x150",
+      format: "Png",
+      isCircular: "false"
+    });
+
+    const response = await fetch(`${THUMBNAILS}?${params}`);
+
+    if (!response.ok) {
+      throw new Error("Unable to retrieve item thumbnails.");
+    }
+
+    const result = await response.json();
+    const map = {};
+
+    for (const thumbnail of result.data || []) {
+      if (thumbnail.state === "Completed" && thumbnail.imageUrl) {
+        map[thumbnail.targetId] = thumbnail.imageUrl;
+      }
+    }
+
+    return map;
+  }
+
+  async function loadCatalog(cursor = null) {
+    const requestId = ++currentRequest;
+
+    showState("Loading catalog", "Fetching avatar items...");
+
+    nextButton.disabled = true;
+    previousButton.disabled = previousCursors.length === 0;
+
+    const params = new URLSearchParams({
+      Category: "1",
+      Limit: "30",
+      SortType: sort.value,
+      SortAggregation: "5"
+    });
+
+    const keyword = search.value.trim();
+
+    if (keyword) {
+      params.set("Keyword", keyword);
+    }
+
+    if (activeCategory !== "all") {
+      params.set("Subcategory", activeCategory);
+    }
+
+    if (cursor) {
+      params.set("Cursor", cursor);
+    }
+
+    try {
+      const response = await fetch(`${API}?${params}`);
+
+      if (!response.ok) {
+        throw new Error("Roblox returned HTTP " + response.status);
+      }
+
+      const result = await response.json();
+
+      if (requestId !== currentRequest) return;
+
+      const items = result.data || [];
+
+      nextCursor = result.nextPageCursor || null;
+
+      count.textContent = items.length + " items";
+      title.textContent = categoryNames[activeCategory] || "All items";
+
+      previousButton.disabled = previousCursors.length === 0;
+      nextButton.disabled = !nextCursor;
+
+      if (!items.length) {
+        showState(
+          "No items found",
+          keyword
+            ? "Try another search or select a different category."
+            : "There are no items available in this category."
+        );
+        return;
+      }
+
+      grid.replaceChildren();
+
+      const thumbnails = await loadThumbnails(items);
+
+      if (requestId !== currentRequest) return;
+
+      for (const item of items) {
+        grid.appendChild(
+          createItemCard(item, thumbnails[item.id])
+        );
+      }
+
+    } catch (error) {
+      if (requestId !== currentRequest) return;
+
+      console.error("Curl catalog:", error);
+
+      showState(
+        "Unable to load the catalog",
+        "The Roblox Marketplace request failed. This may be a network or browser CORS restriction. Check the browser console for details.",
+        true
+      );
+
+      count.textContent = "Unavailable";
+    }
+  }
+
+  function resetPagination() {
+    previousCursors = [];
+    nextCursor = null;
+  }
+
+  let searchTimeout;
+
+  search.addEventListener("input", () => {
+    clearTimeout(searchTimeout);
+
+    searchTimeout = setTimeout(() => {
+      resetPagination();
+      loadCatalog();
+    }, 450);
+  });
+
+  sort.addEventListener("change", () => {
+    resetPagination();
+    loadCatalog();
+  });
+
+  categoryButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      categoryButtons.forEach(item => {
+        item.classList.remove("active");
+      });
+
+      button.classList.add("active");
+      activeCategory = button.dataset.category;
+
+      resetPagination();
+      loadCatalog();
+    });
+  });
+
+  nextButton.addEventListener("click", () => {
+    if (!nextCursor) return;
+
+    previousCursors.push(nextCursor);
+    loadCatalog(nextCursor);
+  });
+
+  previousButton.addEventListener("click", () => {
+    if (!previousCursors.length) return;
+
+    previousCursors.pop();
+
+    const cursor = previousCursors.length
+      ? previousCursors[previousCursors.length - 1]
+      : null;
+
+    loadCatalog(cursor);
+  });
+
+  loadCatalog();
+</script>
+
+</body>
+</html>
