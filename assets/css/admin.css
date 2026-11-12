@@ -50,3 +50,22 @@
     flex-direction: column;
   }
 }
+
+
+.admin-status {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.admin-status-active {
+  color: #55c99b;
+  background: rgba(85, 201, 155, 0.12);
+}
+
+.admin-status-banned {
+  color: #f16c78;
+  background: rgba(241, 108, 120, 0.12);
+}
