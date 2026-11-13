@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,9 +21,11 @@
     Manage Curl community accounts.
   </p>
 
+  <!-- USER MANAGEMENT -->
+
   <section class="section card card-padding">
 
-    <h2 style="margin-top:0">User management</h2>
+    <h2 class="admin-heading">User management</h2>
 
     <div id="admin-message"></div>
 
@@ -32,6 +33,7 @@
       <input
         id="user-search"
         class="form-input"
+        type="search"
         placeholder="Search by username..."
       >
 
@@ -40,30 +42,111 @@
       </button>
     </div>
 
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Curl ID</th>
+            <th>Rank</th>
+            <th>Status</th>
+            <th>Verified</th>
+            <th>Curl Moderator</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
 
-<div class="admin-table-wrap">
-  <table class="admin-table">
-    <thead>
-      <tr>
-        <th>Username</th>
-        <th>Curl ID</th>
-        <th>Rank</th>
-        <th>Status</th>
-        <th>Verified</th>
-        <th>Curl Moderator</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
+        <tbody id="user-list">
+          <tr>
+            <td colspan="7">Loading accounts...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-    <tbody id="user-list">
-      <tr>
-        <td colspan="7">Loading accounts...</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+  </section>
 
+  <!-- CATALOG IMPORTER -->
 
+  <section class="section card card-padding catalog-importer">
+
+    <div class="catalog-importer-header">
+      <div>
+        <h2 class="admin-heading">Catalog importer</h2>
+
+        <p class="page-subtitle">
+          Import classic Roblox avatar catalog items into Curl.
+        </p>
+      </div>
+
+      <span class="importer-tag">R6 CATALOG</span>
+    </div>
+
+    <div class="importer-description">
+      Imports catalog metadata and thumbnail URLs into the
+      Curl database. Only Curl Moderators can run imports.
+    </div>
+
+    <div class="importer-controls">
+
+      <button
+        id="start-import"
+        class="btn btn-primary"
+        type="button"
+      >
+        Start / Continue
+      </button>
+
+      <button
+        id="pause-import"
+        class="btn"
+        type="button"
+        disabled
+      >
+        Pause
+      </button>
+
+      <button
+        id="reset-import"
+        class="btn"
+        type="button"
+      >
+        Reset progress
+      </button>
+
+    </div>
+
+    <div class="importer-progress-area">
+
+      <div class="importer-progress-heading">
+        <span>Import progress</span>
+        <span id="import-progress-label">0 / 13 categories</span>
+      </div>
+
+      <progress
+        id="import-progress"
+        value="0"
+        max="13"
+      ></progress>
+
+    </div>
+
+    <div
+      id="import-status"
+      class="import-status"
+      role="status"
+      aria-live="polite"
+    >
+      Checking importer...
+    </div>
+
+    <div id="import-summary" class="import-summary"></div>
+
+    <div
+      id="import-results"
+      class="import-results"
+      aria-live="polite"
+    ></div>
 
   </section>
 
@@ -73,6 +156,7 @@
 
 <script type="module" src="/assets/js/navbar.js"></script>
 <script type="module" src="/assets/js/admin.js"></script>
+<script type="module" src="/assets/js/catalog-importer.js"></script>
 
 </body>
 </html>
