@@ -205,63 +205,57 @@ function displayResults(data) {
 // IMPORT REQUEST
 // ==========================================
 
-async function requestImport(reset = false) {
-  const token = await getAccessToken();
 
-  const endpoint =
-    "https://bvhxzbmgaejdmuiowfhy.supabase.co/functions/v1/catalog-importer";
+async function requestImport(reset = false) {
+  const {
+    data: { session },
+    error: sessionError
+  } = await supabase.auth.getSession();
+
+  console.log("[Curl Importer] Session exists:", !!session);
+  console.log(
+    "[Curl Importer] Access token exists:",
+    !!session?.access_token
+  );
+  console.log("[Curl Importer] Session error:", sessionError);
+
+  if (sessionError) {
+    throw sessionError;
+  }
+
+  if (!session?.access_token) {
+    throw new Error(
+      "No Supabase session found. Log in again before importing."
+    );
+  }
 
   console.log("[Curl Importer] Sending request...");
   console.log("[Curl Importer] Reset:", reset);
 
-  // Use fetch directly so we can explicitly inspect
-  // the Authorization header and HTTP response.
+  const { data, error } = await supabase.functions.invoke(
+    "catalog-importer",
+    {
+      body: {
+        action: "sync",
+        reset,
+        maxPagesPerCategory: 1
+      }
+    }
+  );
 
-  const response = await fetch(endpoint, {
-    method: "POST",
-
-    headers: {
-      "Content-Type": "application/json",
-      "apikey": "sb_publishable_wjU-j9gFJnXhGDxwcRMFJw_eSGkKkZD",
-      "Authorization": `Bearer ${token}`
-    },
-
-    body: JSON.stringify({
-      action: "sync",
-      reset,
-      maxPagesPerCategory: 1
-    })
-  });
-
-  const responseText = await response.text();
-
-  let data;
-
-  try {
-    data = JSON.parse(responseText);
-  } catch {
-    throw new Error(
-      `Server returned invalid JSON (HTTP ${response.status}): ${responseText}`
-    );
+  if (error) {
+    throw new Error(await getFunctionError(error));
   }
 
-  console.log("[Curl Importer] HTTP status:", response.status);
   console.log("[Curl Importer] Response:", data);
 
-  if (!response.ok) {
-    throw new Error(
-      data.message ||
-      data.error ||
-      `HTTP ${response.status}`
-    );
-  }
-
-  if (data.error) {
+  if (data?.error) {
     throw new Error(data.error);
   }
 
   return data;
 }
+
 
 // ==========================================
 // IMPORT LOOP
